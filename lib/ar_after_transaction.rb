@@ -17,14 +17,11 @@ module ARAfterTransaction
       transaction_without_after(*args) do
         begin
           yield
-        rescue ActiveRecord::Rollback
+        rescue Exception
           clean = false
           raise
         end
       end
-    rescue Exception
-      clean = false
-      raise
     ensure
       unless transactions_open?
         callbacks = delete_after_transaction_callbacks
